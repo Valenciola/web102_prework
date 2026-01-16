@@ -44,7 +44,7 @@ function addGamesToPage(games) {
         // about each game
         // TIP: if your images are not displaying, make sure there is space
         // between the end of the src attribute and the end of the tag ("/>")
-        game.innerHTML = `<img src=${context.img} class="game-img"> <br> Description: ${context.description} <br> Backers: ${context.backers}`;
+        game.innerHTML = `<img src=${context.img} class="game-img"> <br> <strong>${context.name}</strong> <br> Description: ${context.description} <br><br> Backers: ${context.backers} <br> $${context.pledged} out of $${context.goal} raised`;
 
 
         // append the game to the games-container
@@ -154,12 +154,19 @@ allBtn.addEventListener("click", showAllGames);
 const descriptionContainer = document.getElementById("description-container");
 
 // use filter or reduce to count the number of unfunded games
-
+let unfundedcount = GAMES_JSON.filter( (agame) => {
+    return agame.pledged < agame.goal;
+});
+unfundedcount = unfundedcount.length;
 
 // create a string that explains the number of unfunded games using the ternary operator
-
+const unfundeddesc = `A total of $${monies.toLocaleString('en-US')} has been raised for ${GAMES_JSON.length} ${GAMES_JSON == 1 ? "game" : "games"}. Currently, ${unfundedcount} ${unfundedcount == 1 ? "game remains" : "games remain"} unfunded. We need your help to fund these amazing games!`;
+console.log(unfundeddesc);
 
 // create a new DOM element containing the template string and append it to the description container
+let newunfunddesc = document.createElement("p");
+newunfunddesc.innerHTML = unfundeddesc;
+descriptionContainer.appendChild(newunfunddesc);
 
 /************************************************************************************
  * Challenge 7: Select & display the top 2 games
@@ -174,7 +181,15 @@ const sortedGames =  GAMES_JSON.sort( (item1, item2) => {
 });
 
 // use destructuring and the spread operator to grab the first and second games
+const [first, second, ...rest] = sortedGames;
+console.log(first, second);
 
 // create a new element to hold the name of the top pledge game, then append it to the correct element
+let firstup = document.createElement("p");
+firstup.innerHTML = first.name;
+firstGameContainer.appendChild(firstup);
 
 // do the same for the runner up item
+let nextup = document.createElement("p");
+nextup.innerHTML = second.name
+secondGameContainer.appendChild(nextup);
